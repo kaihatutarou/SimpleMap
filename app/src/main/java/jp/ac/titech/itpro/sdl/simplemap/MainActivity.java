@@ -3,19 +3,18 @@ package jp.ac.titech.itpro.sdl.simplemap;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -43,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements
             Manifest.permission.ACCESS_FINE_LOCATION
     };
     private final static int REQCODE_PERMISSIONS = 1111;
+
+    public LatLng lat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,12 +119,19 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "onConnectionFailed");
     }
 
-    @Override
+    public void moveNow(View v) {
+        googleMap.animateCamera(CameraUpdateFactory
+                .newLatLng(lat));
+
+    }
+
+
+
+        @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged: " + location);
-        googleMap.animateCamera(CameraUpdateFactory
-                .newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-    }
+            lat=new LatLng(location.getLatitude(), location.getLongitude());
+        }
 
     @Override
     public void onRequestPermissionsResult(int reqCode,
